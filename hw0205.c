@@ -31,6 +31,8 @@ int main(){
 
     panes-=square*square;
 
+    int32_t ttw=width;
+
     while(panes>=col){
         col++;
         panes-=row;
@@ -62,9 +64,15 @@ int main(){
         for(int32_t i=1;i<=temp_height;i++){
             int32_t exw = extra_width; 
             int32_t cur_wid=0;
+            int32_t used=0;
 
             for(int32_t y=1;y<=col;y++){
                 int32_t temp_width=shell_width;
+                int32_t cur_pane_one=y+col*(x-1);
+                int32_t bigt_height,bigt_width;
+                used=0;
+                bigt_height = temp_height-2;
+                bigt_width = bigt_height*2;
 
                 if(exw>0){
                     temp_width++;
@@ -72,15 +80,59 @@ int main(){
                 }
 
                 for(int32_t j=1;j<=temp_width;j++){  
+                    
                     if(x==row && i==temp_height)  break;           
                     cur_wid++;
                     if(i%temp_height==1 && j%temp_width==1){
-                        if(y+col*(x-1)==command){
-                            printf("$fastfetch");
-                            j+=9;
-                            cur_wid +=9;
+                        if((y+col*(x-1)==command) || (command==0)){
+                            printf("$ fastfetch");
+                            j+=10;
+                            cur_wid +=10;
                         }else
                             printf("$");
+                    }else if(i>1 && ((y+col*(x-1)==command) || (command==0)) && i!=temp_height && !used){
+                        used=1;
+                        int32_t temp=j;
+                        int32_t space = bigt_height-i+1;
+                        int32_t cur_len=bigt_width-space*2;
+                        int32_t bigt_o = cur_len-2;
+                        printf("\033[38;2;23;147;209m");
+
+                        for(int32_t z=1;z<=space;z++,j++){
+                            printf(" ");
+                        }
+                        //printf("%d",bigt_height);
+                        printf("/");
+                        j++;
+                        //printf("%d",bigt_o);
+                        if(bigt_o==0){
+                            printf("\\");
+                            j++;
+                        }else if(((bigt_width-2)/3*2)>=bigt_o){
+                            for(int32_t z=0;z<bigt_o;z++,j++)
+                                printf("o");
+                            printf("\\");
+                            j++;
+                        }else{
+                            for(int32_t z=0;z<(bigt_width-2)/3;z++,j++)
+                                printf("o");
+                            printf("/");
+                            j++;
+
+                            for(int32_t z=0;z<bigt_o-((bigt_width-2)/3*2)-2;z++,j++)
+                                printf(" ");
+                            printf("\\");
+                            j++;
+
+                            for(int32_t z=0;z<(bigt_width-2)/3;z++,j++)
+                                printf("o");
+                            printf("\\");
+                            j++;
+                        }
+                        j--;
+                        temp=j-temp;
+                        cur_wid+=temp;
+                        printf("\033[0m");
                     }else if(i%temp_height==0 && j%temp_width==0 && cur_wid!=width && x!=row){
                         printf("┼");
                     }else if(i%temp_height==0 && x!=row){
@@ -147,7 +199,13 @@ int main(){
             int32_t cur_wid=0;
             int32_t cur_pane=panes;
             for(int y=1;y<=panes;y++){
-                int32_t temp_width=shell_width;   
+                int32_t temp_width=shell_width;  
+                int32_t cur_pane_one=y+col*row; 
+                int32_t bigt_height,bigt_width;
+                int32_t used=0;
+                bigt_height = shell_height-1;
+                bigt_width = bigt_height*2;
+
                 cur_pane--;
                 if(exw){
                     temp_width++;
@@ -156,12 +214,54 @@ int main(){
                 for(int32_t j=1;j<=temp_width;j++){   
                     cur_wid++;
                     if(i%shell_height==1 && j%temp_width==1){
-                        if(y+(row-1)*col==command){
-                        printf("$fastfetch");
-                            j+=9; 
-                            cur_wid+=9;
+                        if(((cur_pane_one==command) || (command==0)) && i==1){
+                            printf("$ fastfetch");
+                            j+=10; 
+                            cur_wid+=10;
                         }else
                             printf("$");
+                    }else if(i>1 && ((cur_pane_one==command) || (command==0))&& !used){
+                        used=1;
+                        int32_t temp=j;
+                        int32_t space = bigt_height-i+1;
+                        int32_t cur_len=bigt_width-space*2;
+                        int32_t bigt_o = cur_len-2;
+                        printf("\033[38;2;23;147;209m");
+                        for(int32_t z=1;z<=space;z++,j++){
+                            printf(" ");
+                        }
+                        //printf("%d",bigt_height);
+                        printf("/");
+                        j++;
+                        //printf("%d",bigt_o);
+                        if(bigt_o==0){
+                            printf("\\");
+                            j++;
+                        }else if(((bigt_width-2)/3*2)>=bigt_o){
+                            for(int32_t z=0;z<bigt_o;z++,j++)
+                                printf("o");
+                            printf("\\");
+                            j++;
+                        }else{
+                            for(int32_t z=0;z<(bigt_width-2)/3;z++,j++)
+                                printf("o");
+                            printf("/");
+                            j++;
+
+                            for(int32_t z=0;z<bigt_o-((bigt_width-2)/3*2)-2;z++,j++)
+                                printf(" ");
+                            printf("\\");
+                            j++;
+
+                            for(int32_t z=0;z<(bigt_width-2)/3;z++,j++)
+                                printf("o");
+                            printf("\\");
+                            j++;
+                        }
+                        j--;
+                        temp=j-temp;
+                        cur_wid+=temp;
+                        printf("\033[0m");
                     }else if(i%shell_height==0 && j%temp_width==0 && cur_wid!=width && i!=shell_height){
                         printf("┼");
 
@@ -179,6 +279,12 @@ int main(){
             printf("\n");
         }
     }
-    printf("\033[48;2;0;255;0m[0] 0:bash*\033[0m\n"); return 0;
+    printf("\033[48;2;0;255;0m[0] 0:bash*"); 
+    for(int32_t tt=12;tt<=width;tt++)
+        printf(" ");
+    printf("\033[0m\n");
+    return 0;
 }
+
+
 
