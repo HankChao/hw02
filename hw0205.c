@@ -33,7 +33,7 @@ int main(){
 
     int32_t ttw=width;
 
-    while(panes>=col){
+    while(panes>col){
         col++;
         panes-=row;
     }
