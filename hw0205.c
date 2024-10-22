@@ -71,17 +71,24 @@ int main(){
                 int32_t cur_pane_one=y+col*(x-1);
                 int32_t bigt_height,bigt_width;
                 used=0;
+                
                 bigt_height = temp_height-2;
+                if(x==row && panes==0) { 
+                    bigt_height++;
+                }
                 bigt_width = bigt_height*2;
 
                 if(exw>0){
                     temp_width++;
                     exw--;
                 }
-
+                int32_t flag=0;
+                if((x==row && panes==0) || (i!=temp_height))
+                    flag=1;
+                
                 for(int32_t j=1;j<=temp_width;j++){  
                     
-                    if(x==row && i==temp_height)  break;           
+                    if(x==row && i==temp_height && panes!=0)  break;           
                     cur_wid++;
                     if(i%temp_height==1 && j%temp_width==1){
                         if((y+col*(x-1)==command) || (command==0)){
@@ -90,7 +97,7 @@ int main(){
                             cur_wid +=10;
                         }else
                             printf("$");
-                    }else if(i>1 && ((y+col*(x-1)==command) || (command==0)) && i!=temp_height && !used){
+                    }else if(i>1 && ((y+col*(x-1)==command) || (command==0)) && flag && !used){
                         used=1;
                         int32_t temp=j;
                         int32_t space = bigt_height-i+1;
@@ -152,45 +159,46 @@ int main(){
         }
     }
     //string
-    int32_t cur_wid=0;
-    int32_t exw = extra_width; 
-    int32_t all=0;
-    int32_t str_pane=panes;
-    for(int32_t y=1;y<=col-1;y++){
-        str_pane--;
-        int32_t temp_width=shell_width;   
-        if(exw){
-            temp_width++;
-            exw--;
-        }
-        for(int32_t j=1;j<=temp_width;j++){   
-            if(panes){
-                cur_wid++;
-                all++;
-                if(j%temp_width==0 && cur_wid!=width){
-                    if(str_pane>0)
-                        printf("┼");
-                    else
-                        printf("┴");
+    if(panes!=0){
+        int32_t cur_wid=0;
+        int32_t exw = extra_width; 
+        int32_t all=0;
+        int32_t str_pane=panes;
+        for(int32_t y=1;y<=col-1;y++){
+            str_pane--;
+            int32_t temp_width=shell_width;   
+            if(exw){
+                temp_width++;
+                exw--;
+            }
+            for(int32_t j=1;j<=temp_width;j++){   
+                if(panes){
+                    cur_wid++;
+                    all++;
+                    if(j%temp_width==0 && cur_wid!=width){
+                        if(str_pane>0)
+                            printf("┼");
+                        else
+                            printf("┴");
+                    }else{
+                        printf("─");
+                        
+                    }
                 }else{
-                    printf("─");
-                    
+                    if(j%temp_width==0 && cur_wid!=width)
+                        printf("│");
+                    else   
+                        printf(" ");
                 }
-            }else{
-                if(j%temp_width==0 && cur_wid!=width)
-                    printf("│");
-                else   
-                    printf(" ");
             }
         }
-    }
-    if(panes){
-        for(int32_t i=1;i<=width-all;i++)
-            printf("─");
+        if(panes){
+            for(int32_t i=1;i<=width-all;i++)
+                printf("─");
+        }
+        
     }
     printf("\n");
-         
-    
 
     //downer
     if(panes){
