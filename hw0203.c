@@ -10,7 +10,7 @@ int main(){
         double t=0;
 
         printf("Please enter the year: ");
-        if(scanf("%lf", &year) != 1 || year==-2){
+        if(scanf("%lf", &year) != 1){
             printf("Invalid Input\n");
             return 0;
         }
@@ -31,11 +31,12 @@ int main(){
         sum_x += year;
         sum_y += t;
 
-
-
-        
-
         i++;
+    }
+
+    if(i<=1){
+        printf("error, too little data\n");
+        return 0;
     }
     
     sxx = sxx - (sum_x*sum_x)/i;
@@ -54,7 +55,7 @@ int main(){
         return 0;
     }
 
-    printf("Temperature: %.2lf\n",b*pre_year+a);
+    printf("Temperature: %.1lf\n",b*pre_year+a);
 
     return 0;
 

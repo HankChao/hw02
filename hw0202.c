@@ -8,9 +8,10 @@ int main(){
         int32_t n=-1;
 
         printf("Please enter DNA base: ");
-        if(scanf("%d",&n)!=1 || n==-1 ||  n<1 || n>4){
-            printf("Invalid input\n");
+        if(scanf("%d",&n)!=1 || ((n==-1 ||  n<1 || n>4) && n!=0)){
+            printf("Invalid input, all the input has been cleared ,please reinput\n");
             scanf("%*[^\n]");
+            cur=0;
             continue;
         }
 
